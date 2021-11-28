@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+autonumber
+
+
+-> SecurityInterceptor: attemptAuthorization
+
+activate SecurityInterceptor
+SecurityInterceptor -> AccessDecisionManager : accessDecisionManager.decide
+
+activate AccessDecisionManager
+AccessDecisionManager -> AccessDecisionVoter: voter.vote
+
+activate AccessDecisionVoter
+AccessDecisionManager <- AccessDecisionVoter: return ACCESS_CODE(int)
+deactivate AccessDecisionVoter
+SecurityInterceptor   <- AccessDecisionManager : Result
+deactivate AccessDecisionManager
+
+ <- SecurityInterceptor: Result
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+autonumber
+actor Client
+
+Client -> AuthenticationFilter: Http Request
+
+activate AuthenticationFilter
+AuthenticationFilter -> AuthenticationManger: authenticate
+
+activate AuthenticationManger
+AuthenticationManger -> AuthenticationProvider: provider.authenticate
+
+activate AuthenticationProvider
+AuthenticationProvider -> UserDetailsService: loadUserByUsername
+
+database Repository
+
+activate UserDetailsService
+UserDetailsService <-> Repository : get UserInfo
+AuthenticationProvider <- UserDetailsService: Response UserDetails
+
+deactivate UserDetailsService
+AuthenticationManger <- AuthenticationProvider: Response Authentication
+deactivate AuthenticationProvider
+AuthenticationFilter <- AuthenticationManger: Response
+deactivate AuthenticationManger
+Client <-- AuthenticationFilter: Http Response
+deactivate AuthenticationFilter
+@enduml
