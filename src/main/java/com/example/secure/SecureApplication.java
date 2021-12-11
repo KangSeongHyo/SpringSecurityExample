@@ -21,9 +21,9 @@ public class SecureApplication implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         Member member = new Member();
-        member.username="user1";
-        member.password=passwordEncoder.encode("pw");
-        member.authority= "USER";
+        member.setUsername("user");
+        member.setPassword(passwordEncoder.encode("password"));
+        member.setAuthority("USER");
         memberRepository.save(member);
     }
 }
