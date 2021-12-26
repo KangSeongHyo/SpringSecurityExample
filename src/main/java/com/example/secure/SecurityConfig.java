@@ -1,6 +1,8 @@
 package com.example.secure;
 
+import com.example.secure.jwt.JwtSuccessHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -31,10 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         JsonIdPwAuthenticationFilter jsonAuthenticationFilter = new JsonIdPwAuthenticationFilter(LOGIN_REQUEST_MATCHER);
         jsonAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
+        jsonAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
 
         http.csrf().disable();
         http.addFilterAt(jsonAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
-        // http.userDetailsService(userDetailsService);
+        http.userDetailsService(userDetailsService);
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new JwtSuccessHandler();
     }
 
     @Override
