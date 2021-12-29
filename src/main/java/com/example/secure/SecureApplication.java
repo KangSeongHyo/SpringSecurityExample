@@ -23,7 +23,7 @@ public class SecureApplication implements InitializingBean {
         Member member = new Member();
         member.setUsername("user");
         member.setPassword(passwordEncoder.encode("password"));
-        member.setAuthority("USER");
+        member.setAuthority("ROLE_USER");
         memberRepository.save(member);
     }
 }
